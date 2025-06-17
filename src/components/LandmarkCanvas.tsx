@@ -44,12 +44,12 @@ export default function LandmarkCanvas() {
     const runDetection = async () => {
       if (!videoRef.current || !landmarkerRef.current) return;
       const results: PoseLandmarkerResult =
-        await landmarkerRef.current.detectForVideo(
+        landmarkerRef.current.detectForVideo(
           videoRef.current,
           performance.now()
         );
 
-      if (results.worldLandmarks?.[0]) {
+      if (results.worldLandmarks) {
         setLandmarks3D(results.worldLandmarks[0]);
       }
 

@@ -20,12 +20,7 @@ export default function LandmarkSkeleton({
           <Sphere
             key={i}
             args={[0.01, 16, 16]}
-            //   position={[
-            //     landmark.x - 0.5,
-            //     -(landmark.y - 2.5),
-            //     -landmark.z * 0.5,
-            //   ]} // -- Position if we used landmarks instead of worldLandmarks
-            position={[landmark.x, -(landmark.y - 0.5), -landmark.z * 0.5]}
+            position={[-landmark.x, -(landmark.y - 0.5), -landmark.z * 0.5]}
           >
             <meshStandardMaterial attach="material" color="hotpink" />
           </Sphere>

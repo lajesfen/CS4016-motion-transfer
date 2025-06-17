@@ -1,108 +1,160 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { Landmark } from "./LandmarkCanvas";
-import LandmarkSkeleton from "./LandmarkSkeleton";
 import { PoseLandmarks } from "./PoseLandmarks";
 
 function CharacterModel({ landmarks }: { landmarks: Landmark[] }) {
   const gltf = useGLTF("/character.glb");
   const modelRef = useRef<THREE.Group>(null);
+  const skeletonRef = useRef<THREE.Skeleton | null>(null);
 
   useEffect(() => {
     if (!modelRef.current) return;
-    console.log(" model for bones and skinned meshes...");
-    modelRef.current.traverse((obj) => {
-      if ((obj as THREE.SkinnedMesh).isSkinnedMesh) {
-        console.log(" SkinnedMesh:", obj.name);
-      }
-      if ((obj as THREE.Bone).isBone) {
-        console.log(" Bone:", obj.name);
-      }
-    });
-  }, []);
 
-  useFrame(() => {
-    if (!modelRef.current || landmarks.length === 0) return;
-
-    let foundSkeleton: THREE.Skeleton | null = null;
     modelRef.current.traverse((obj) => {
       if ((obj as THREE.SkinnedMesh).isSkinnedMesh) {
         const mesh = obj as THREE.SkinnedMesh;
+
         if (mesh.skeleton && mesh.skeleton.bones.length > 0) {
-          foundSkeleton = mesh.skeleton;
+          skeletonRef.current = mesh.skeleton;
+        }
+
+        if ((obj as THREE.Bone).isBone) {
+          console.log(" Bone:", obj.name);
         }
       }
     });
+  }, []);
 
-    if (!foundSkeleton) {
-      console.warn("XXXXX No skeleton found in the model");
+  const getLandmarkVector = (landmarkIndex: number): THREE.Vector3 => {
+    const landmark = landmarks[landmarkIndex];
+    if (!landmark) return new THREE.Vector3();
+    return new THREE.Vector3(landmark.x, landmark.y, landmark.z);
+  };
+
+  const calculateDirection = (
+    from: THREE.Vector3,
+    to: THREE.Vector3
+  ): THREE.Vector3 => {
+    return new THREE.Vector3().subVectors(to, from).normalize();
+  };
+
+  const getPerpendicularVector = (
+    vector1: THREE.Vector3,
+    vector2: THREE.Vector3
+  ): THREE.Vector3 => {
+    return new THREE.Vector3().crossVectors(vector1, vector2).normalize();
+  };
+
+  const getMidpointVector = (
+    vector1: THREE.Vector3,
+    vector2: THREE.Vector3
+  ): THREE.Vector3 => {
+    return new THREE.Vector3().addVectors(vector1, vector2).multiplyScalar(0.5);
+  };
+
+  const applyBoneRotation = (
+    boneName: string,
+    direction: THREE.Vector3, // Direccion global de los landmarks
+    localForward: THREE.Vector3 // Direccion local del hueso (ej. Z positivo hacia adelante en el modelo)
+  ) => {
+    if (!skeletonRef.current) return;
+
+    const bone = skeletonRef.current.bones.find((b) => b.name === boneName);
+    if (!bone) return;
+
+    const parentWorldQuat = bone.parent?.getWorldQuaternion(new THREE.Quaternion()) ?? new THREE.Quaternion(); // Obtiene rotacion global del hueso padre (o el mismo hueso)
+    const parentWorldQuatInverse = parentWorldQuat.clone().invert(); // Se obtiene la rotacion inversa del padre para convertir de global a local mas abajo
+
+    const localDirection = direction.clone().applyQuaternion(parentWorldQuatInverse); // Convierte direccion de world space a bone's local space
+
+    const targetQuat = new THREE.Quaternion().setFromUnitVectors(
+      localForward,
+      localDirection
+    );
+    bone.quaternion.slerp(targetQuat, 0.3);
+  };
+
+  useFrame(() => {
+    if (
+      !modelRef.current ||
+      !landmarks ||
+      landmarks.length === 0 ||
+      !skeletonRef.current
+    )
       return;
-    }
 
-    const bones = foundSkeleton.bones;
+    applyBoneRotation(
+      "mixamorigHead",
+      calculateDirection(
+        getLandmarkVector(PoseLandmarks.NOSE),
+        getPerpendicularVector(
+          getLandmarkVector(PoseLandmarks.MOUTH_RIGHT),
+          getLandmarkVector(PoseLandmarks.MOUTH_LEFT),
+        )
+      ),
+      new THREE.Vector3(0, 0, 1)
+    );
 
-    const applyBoneRotation = (boneName: string, from: Landmark, to: Landmark) => {
-      const bone = bones.find(b => b.name === boneName);
-      // Debug:
-      // console.log("Trying bone:", boneName, "→ Found:", bone?.name);
-      if (!bone || !from || !to) return;
+    applyBoneRotation(
+      "mixamorigNeck",
+      calculateDirection(
+        getMidpointVector(
+          getLandmarkVector(PoseLandmarks.MOUTH_RIGHT),
+          getLandmarkVector(PoseLandmarks.MOUTH_LEFT)
+        ),
+        getMidpointVector(
+          getLandmarkVector(PoseLandmarks.RIGHT_SHOULDER),
+          getLandmarkVector(PoseLandmarks.LEFT_SHOULDER)
+        )
+      ),
+      new THREE.Vector3(0, 1, 0)
+    );
 
-      const direction = new THREE.Vector3(to.x - from.x, to.y - from.y, to.z - from.z).normalize();
-      const targetQuat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(1, 0, 0), direction);
-      bone.quaternion.slerp(targetQuat, 0.3);
-    };
+    applyBoneRotation(
+      "mixamorigRightArm", // Por algun motivo los PoseLandmarks de LEFT controlan el brazo derecho (POR REVISAR)
+      calculateDirection(
+        getLandmarkVector(PoseLandmarks.LEFT_SHOULDER),
+        getLandmarkVector(PoseLandmarks.LEFT_ELBOW)
+      ),
+      new THREE.Vector3(0, -1, 0)
+    );
 
-    // --- SPINE/HEAD ---
-    applyBoneRotation("mixamorigHips",         landmarks[23], landmarks[24]); // for root/hip twist
-    applyBoneRotation("mixamorigSpine",        landmarks[23], landmarks[11]);
-    applyBoneRotation("mixamorigSpine1",       landmarks[23], landmarks[11]);
-    applyBoneRotation("mixamorigSpine2",       landmarks[11], landmarks[0]);
-    applyBoneRotation("mixamorigNeck",         landmarks[0],  landmarks[2]);
-    applyBoneRotation("mixamorigHead",         landmarks[2],  landmarks[3]);
+    applyBoneRotation(
+      "mixamorigRightForeArm",
+      calculateDirection(
+        getLandmarkVector(PoseLandmarks.LEFT_ELBOW),
+        getLandmarkVector(PoseLandmarks.LEFT_WRIST)
+      ),
+      new THREE.Vector3(0, -1, 0)
+    );
 
-    // --- LEFT ARM ---
-    applyBoneRotation("mixamorigLeftShoulder", landmarks[11], landmarks[13]);
-    applyBoneRotation("mixamorigLeftArm",      landmarks[13], landmarks[15]);
-    applyBoneRotation("mixamorigLeftForeArm",  landmarks[13], landmarks[15]);
-    applyBoneRotation("mixamorigLeftHand",     landmarks[15], landmarks[19]);
+    applyBoneRotation(
+      "mixamorigLeftArm", // Por algun motivo los PoseLandmarks de RIGHT controlan el brazo izquierdo (POR REVISAR)
+      calculateDirection(
+        getLandmarkVector(PoseLandmarks.RIGHT_SHOULDER),
+        getLandmarkVector(PoseLandmarks.RIGHT_ELBOW)
+      ),
+      new THREE.Vector3(0, -1, 0)
+    );
 
-    // --- RIGHT ARM ---
-    applyBoneRotation("mixamorigRightShoulder", landmarks[12], landmarks[14]);
-    applyBoneRotation("mixamorigRightArm",      landmarks[14], landmarks[16]);
-    applyBoneRotation("mixamorigRightForeArm",  landmarks[14], landmarks[16]);
-    applyBoneRotation("mixamorigRightHand",     landmarks[16], landmarks[20]);
-
-    // --- LEFT LEG ---
-    applyBoneRotation("mixamorigLeftUpLeg", landmarks[23], landmarks[25]);
-    applyBoneRotation("mixamorigLeftLeg",   landmarks[25], landmarks[27]);
-
-    // --- RIGHT LEG ---
-    applyBoneRotation("mixamorigRightUpLeg", landmarks[24], landmarks[26]);
-    applyBoneRotation("mixamorigRightLeg",   landmarks[26], landmarks[28]);
-
-    // --- HANDS (index/thumb only for demo) ---
-    applyBoneRotation("mixamorigLeftHandThumb1",  landmarks[15], landmarks[21]);
-    applyBoneRotation("mixamorigLeftHandIndex1",  landmarks[15], landmarks[19]);
-    applyBoneRotation("mixamorigRightHandThumb1", landmarks[16], landmarks[22]);
-    applyBoneRotation("mixamorigRightHandIndex1", landmarks[16], landmarks[20]);
-
+    applyBoneRotation(
+      "mixamorigLeftForeArm",
+      calculateDirection(
+        getLandmarkVector(PoseLandmarks.RIGHT_ELBOW),
+        getLandmarkVector(PoseLandmarks.RIGHT_WRIST)
+      ),
+      new THREE.Vector3(0, -1, 0)
+    );
   });
 
   useEffect(() => {
-    if (modelRef.current) {
-      modelRef.current.position.set(0, 0, 0);
-      //modelRef.current.rotation.set(-Math.PI / 2, 100, 0); 
-      modelRef.current.rotation.set(-Math.PI / 2, 100 * Math.PI / 180,0);
-      
-      modelRef.current.scale.set(0.01, 0.01, 0.01);
-      
-      modelRef.current.scale.set(0.01, 0.01, 0.01);
-    }
+    if (!modelRef.current) return;
+    modelRef.current.scale.set(0.01, 0.01, 0.01);
   }, []);
-  
 
   return <primitive ref={modelRef} object={gltf.scene} />;
 }
@@ -117,7 +169,7 @@ export default function ThreeCanvas({ landmarks }: { landmarks: Landmark[] }) {
       <axesHelper args={[5]} />
 
       <CharacterModel landmarks={landmarks} />
-      <LandmarkSkeleton landmarks={landmarks} />
+      {/* <LandmarkSkeleton landmarks={landmarks} /> */}
     </Canvas>
   );
 }
