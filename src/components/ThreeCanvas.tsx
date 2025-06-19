@@ -149,11 +149,49 @@ function CharacterModel({ landmarks }: { landmarks: Landmark[] }) {
       ),
       new THREE.Vector3(0, -1, 0)
     );
+
+    applyBoneRotation(
+      "mixamorigRightUpLeg",
+      calculateDirection(
+        getLandmarkVector(PoseLandmarks.LEFT_HIP),
+        getLandmarkVector(PoseLandmarks.LEFT_KNEE)
+      ),
+      new THREE.Vector3(0, -1, 0)
+    );
+
+    applyBoneRotation(
+      "mixamorigRightLeg",
+      calculateDirection(
+        getLandmarkVector(PoseLandmarks.LEFT_KNEE),
+        getLandmarkVector(PoseLandmarks.LEFT_ANKLE)
+      ),
+      new THREE.Vector3(0, -1, 0)
+    );
+
+    applyBoneRotation(
+      "mixamorigLeftUpLeg",
+      calculateDirection(
+        getLandmarkVector(PoseLandmarks.RIGHT_HIP),
+        getLandmarkVector(PoseLandmarks.RIGHT_KNEE)
+      ),
+      new THREE.Vector3(0, -1, 0)
+    );
+
+    applyBoneRotation(
+      "mixamorigLeftLeg",
+      calculateDirection(
+        getLandmarkVector(PoseLandmarks.RIGHT_KNEE),
+        getLandmarkVector(PoseLandmarks.RIGHT_ANKLE)
+      ),
+      new THREE.Vector3(0, -1, 0)
+    );
+    
+    modelRef.current.position.set(0, 0, 0);
   });
 
   useEffect(() => {
     if (!modelRef.current) return;
-    modelRef.current.scale.set(0.01, 0.01, 0.01);
+    modelRef.current.scale.set(0.02, 0.02, 0.02);
   }, []);
 
   return <primitive ref={modelRef} object={gltf.scene} />;

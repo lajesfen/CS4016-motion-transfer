@@ -1,6 +1,6 @@
 import {
-    FilesetResolver,
-    PoseLandmarker
+  FilesetResolver,
+  PoseLandmarker
 } from "@mediapipe/tasks-vision";
 import { useEffect, useRef } from "react";
 
@@ -15,10 +15,14 @@ export const usePoseLandmarker = () => {
       landmarkerRef.current = await PoseLandmarker.createFromOptions(vision, {
         baseOptions: {
           modelAssetPath:
-            "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
+            "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task",
           delegate: "GPU",
         },
         runningMode: "VIDEO",
+        minPoseDetectionConfidence: 0.9,
+        minPosePresenceConfidence: 0.9,
+        minTrackingConfidence: 0.8,
+        numPoses: 1,
       });
     };
     loadModel();
