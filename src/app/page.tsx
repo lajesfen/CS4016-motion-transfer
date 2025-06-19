@@ -7,7 +7,7 @@ export default function Home() {
       <div className="flex m-5">
         <LandmarkCanvas />
       </div>
-      <a className="text-neutral-500 hover:text-white hover:underline transition-all duration-200" href="https://github.com/lajesfen/CS4016-mocap-three">github.com/CS4016-mocap-three</a>
+      <a className="text-neutral-500 hover:text-white hover:underline transition-all duration-200" href="https://github.com/lajesfen/CS4016-motion-transfer">github.com/CS4016-motion-transfer</a>
     </div>
   );
 }
