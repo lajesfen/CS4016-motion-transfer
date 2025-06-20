@@ -20,7 +20,6 @@ export const usePoseLandmarker = () => {
         },
         runningMode: "VIDEO",
         minPoseDetectionConfidence: 0.9,
-        minPosePresenceConfidence: 0.9,
         minTrackingConfidence: 0.8,
         numPoses: 1,
       });

@@ -1,4 +1,5 @@
 "use client";
+import { Landmark } from "@/types/Landmark";
 import {
   DrawingUtils,
   PoseLandmarker,
@@ -6,15 +7,12 @@ import {
 } from "@mediapipe/tasks-vision";
 import { useEffect, useRef, useState } from "react";
 import { usePoseLandmarker } from "../hooks/usePoseLandmarker";
-import ThreeCanvas from "./ThreeCanvas";
 
-export type Landmark = {
-  x: number;
-  y: number;
-  z: number;
-};
-
-export default function LandmarkCanvas() {
+export default function WebcamView({
+  onLandmarksUpdate,
+}: {
+  onLandmarksUpdate: (landmarks: Landmark[]) => void;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const landmarkerRef = usePoseLandmarker();
@@ -22,7 +20,6 @@ export default function LandmarkCanvas() {
     width: number;
     height: number;
   } | null>(null);
-  const [landmarks3D, setLandmarks3D] = useState<Landmark[]>([]);
 
   useEffect(() => {
     let animationId: number;
@@ -50,7 +47,7 @@ export default function LandmarkCanvas() {
         );
 
       if (results.worldLandmarks) {
-        setLandmarks3D(results.worldLandmarks[0]);
+        onLandmarksUpdate(results.worldLandmarks[0]);
       }
 
       const ctx = canvasRef.current?.getContext("2d");
@@ -75,27 +72,21 @@ export default function LandmarkCanvas() {
   }, [landmarkerRef]);
 
   return (
-    <div className="flex flex-row gap-4 p-4">
-      <div className="relative w-full max-w[640px] aspect-auto">
-        <video
-          className="h-full object-cover transform -scale-x-100"
-          ref={videoRef}
-          autoPlay
-          muted
-          playsInline
-        />
-        <canvas
-          ref={canvasRef}
-          className="absolute top-0 left-0 h-full pointer-events-none"
-          width={dimensions?.width}
-          height={dimensions?.height}
-          style={{ transform: "scaleX(-1)" }}
-        />
-      </div>
-
-      <div className="w-full border border-white rounded">
-        <ThreeCanvas landmarks={landmarks3D} />
-      </div>
+    <div className="relative w-full max-w[640px] aspect-auto">
+      <video
+        className="h-full object-cover transform -scale-x-100"
+        ref={videoRef}
+        autoPlay
+        muted
+        playsInline
+      />
+      <canvas
+        ref={canvasRef}
+        className="absolute top-0 left-0 h-full pointer-events-none"
+        width={dimensions?.width}
+        height={dimensions?.height}
+        style={{ transform: "scaleX(-1)" }}
+      />
     </div>
   );
 }
