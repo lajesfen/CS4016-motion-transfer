@@ -1,0 +1,138 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f1260b785da3e24ebe737764cc33de0, type: 3}
+  m_Name: Character(Clone)4e54173f32f5dcb4aacfc1d5cedee562
+  m_EditorClassIdentifier: 
+  note: 
+  parentCalibrationData:
+  - bone: 14
+    data:
+      parentn: Character(Clone)/Rig/root/hips/spine/chest/upperarm.r/
+      childn: Character(Clone)/Rig/root/hips/spine/chest/upperarm.r/lowerarm.r/
+      tparentn: PipeServer/Body Parent/RIGHT_SHOULDER/
+      tchildn: PipeServer/Body Parent/RIGHT_ELBOW/
+      initialDir: {x: -0.9620886, y: -0.1498572, z: -0.22787805}
+      initialRotation: {x: -0.48546806, y: 0.5141216, z: 0.5141217, w: 0.48546743}
+      targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  - bone: 16
+    data:
+      parentn: Character(Clone)/Rig/root/hips/spine/chest/upperarm.r/lowerarm.r/
+      childn: Character(Clone)/Rig/root/hips/spine/chest/upperarm.r/lowerarm.r/wrist.r/
+      tparentn: PipeServer/Body Parent/RIGHT_ELBOW/
+      tchildn: PipeServer/Body Parent/RIGHT_WRIST/
+      initialDir: {x: -0.97236073, y: -0.20895362, z: -0.10417771}
+      initialRotation: {x: -0.513149, y: 0.48649588, z: 0.48649615, w: 0.51314855}
+      targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  - bone: 2
+    data:
+      parentn: Character(Clone)/Rig/root/hips/upperleg.r/
+      childn: Character(Clone)/Rig/root/hips/upperleg.r/lowerleg.r/
+      tparentn: PipeServer/Body Parent/RIGHT_HIP/
+      tchildn: PipeServer/Body Parent/RIGHT_KNEE/
+      initialDir: {x: -0.090900354, y: -0.9920565, z: -0.08695385}
+      initialRotation: {x: 0.00000003172626, y: 0.017373597, z: -0.9998491, w: 0.00000007426626}
+      targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  - bone: 4
+    data:
+      parentn: Character(Clone)/Rig/root/hips/upperleg.r/lowerleg.r/
+      childn: Character(Clone)/Rig/root/hips/upperleg.r/lowerleg.r/foot.r/
+      tparentn: PipeServer/Body Parent/RIGHT_KNEE/
+      tchildn: PipeServer/Body Parent/RIGHT_ANKLE/
+      initialDir: {x: -0.026718644, y: -0.9219532, z: 0.38637853}
+      initialRotation: {x: 0.000000106799426, y: -0.08893488, z: -0.9960375, w: -0.000000004476746}
+      targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  - bone: 13
+    data:
+      parentn: Character(Clone)/Rig/root/hips/spine/chest/upperarm.l/
+      childn: Character(Clone)/Rig/root/hips/spine/chest/upperarm.l/lowerarm.l/
+      tparentn: PipeServer/Body Parent/LEFT_SHOULDER/
+      tchildn: PipeServer/Body Parent/LEFT_ELBOW/
+      initialDir: {x: 0.8778012, y: -0.43767866, z: -0.1946856}
+      initialRotation: {x: 0.4854683, y: 0.5141213, z: 0.514122, w: -0.48546726}
+      targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  - bone: 15
+    data:
+      parentn: Character(Clone)/Rig/root/hips/spine/chest/upperarm.l/lowerarm.l/
+      childn: Character(Clone)/Rig/root/hips/spine/chest/upperarm.l/lowerarm.l/wrist.l/
+      tparentn: PipeServer/Body Parent/LEFT_ELBOW/
+      tchildn: PipeServer/Body Parent/LEFT_WRIST/
+      initialDir: {x: 0.96098167, y: -0.08219851, z: -0.26411667}
+      initialRotation: {x: 0.51314926, y: 0.48649555, z: 0.48649645, w: -0.51314837}
+      targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  - bone: 1
+    data:
+      parentn: Character(Clone)/Rig/root/hips/upperleg.l/
+      childn: Character(Clone)/Rig/root/hips/upperleg.l/lowerleg.l/
+      tparentn: PipeServer/Body Parent/LEFT_HIP/
+      tchildn: PipeServer/Body Parent/LEFT_KNEE/
+      initialDir: {x: -0.134038, y: -0.9743032, z: 0.18101686}
+      initialRotation: {x: 0.0000000120427615, y: 0.017373597, z: -0.9998491, w: -0.00000007132817}
+      targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  - bone: 3
+    data:
+      parentn: Character(Clone)/Rig/root/hips/upperleg.l/lowerleg.l/
+      childn: Character(Clone)/Rig/root/hips/upperleg.l/lowerleg.l/foot.l/
+      tparentn: PipeServer/Body Parent/LEFT_KNEE/
+      tchildn: PipeServer/Body Parent/LEFT_ANKLE/
+      initialDir: {x: 0.116745345, y: -0.8702902, z: 0.47850335}
+      initialRotation: {x: -0.000000062965924, y: -0.08893486, z: -0.9960375, w: 0.0000000027488132}
+      targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  - bone: 5
+    data:
+      parentn: Character(Clone)/Rig/root/hips/upperleg.l/lowerleg.l/foot.l/
+      childn: Character(Clone)/Rig/root/hips/upperleg.l/lowerleg.l/foot.l/toes.l/
+      tparentn: PipeServer/Body Parent/LEFT_ANKLE/
+      tchildn: PipeServer/Body Parent/LEFT_FOOT_INDEX/
+      initialDir: {x: 0.12070772, y: -0.83599347, z: -0.5352986}
+      initialRotation: {x: -0.000000117034666, y: 0.3742507, z: -0.9273277, w: 0.00000002292289}
+      targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  - bone: 6
+    data:
+      parentn: Character(Clone)/Rig/root/hips/upperleg.r/lowerleg.r/foot.r/
+      childn: Character(Clone)/Rig/root/hips/upperleg.r/lowerleg.r/foot.r/toes.r/
+      tparentn: PipeServer/Body Parent/RIGHT_ANKLE/
+      tchildn: PipeServer/Body Parent/RIGHT_FOOT_INDEX/
+      initialDir: {x: 0.6190436, y: -0.766447, z: -0.17130077}
+      initialRotation: {x: -0.00000010013501, y: 0.37425068, z: -0.92732775, w: 0.00000006479719}
+      targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  spineUpDown:
+    parentn: 
+    childn: 
+    tparentn: 
+    tchildn: 
+    initialDir: {x: 0, y: 0, z: 0}
+    initialRotation: {x: 0, y: 0, z: 0, w: 0}
+    targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  hipsTwist:
+    parentn: Character(Clone)/Rig/root/hips/
+    childn: Character(Clone)/Rig/root/hips/
+    tparentn: PipeServer/Body Parent/RIGHT_HIP/
+    tchildn: PipeServer/Body Parent/LEFT_HIP/
+    initialDir: {x: 0.9798989, y: 0.024307434, z: -0.19800816}
+    initialRotation: {x: -0, y: 1, z: 3.5527137e-15, w: 0}
+    targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  chest:
+    parentn: 
+    childn: 
+    tparentn: 
+    tchildn: 
+    initialDir: {x: 0, y: 0, z: 0}
+    initialRotation: {x: 0, y: 0, z: 0, w: 0}
+    targetRotation: {x: 0, y: 0, z: 0, w: 0}
+  head:
+    parentn: 
+    childn: 
+    tparentn: 
+    tchildn: 
+    initialDir: {x: 0, y: 0, z: 0}
+    initialRotation: {x: 0, y: 0, z: 0, w: 0}
+    targetRotation: {x: 0, y: 0, z: 0, w: 0}
