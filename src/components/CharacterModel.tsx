@@ -1,6 +1,14 @@
 "use client";
 import { Landmark } from "@/types/Landmark";
-import { calculateDirection, getMidpointVector } from "@/utils/mathUtils";
+// Importing our custom math utils! :)
+import { 
+  calculateDirection, 
+  getMidpointVector,
+  applyQuaternionToVector3,
+  quaternionFromUnitVectors,
+  invertQuaternion,
+  quaternionFromEuler
+} from "@/utils/mathUtils";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
@@ -44,7 +52,8 @@ export default function CharacterModel({
     if (!landmark) return new THREE.Vector3();
     return new THREE.Vector3(landmark.x, landmark.y, landmark.z);
   };
-
+  
+  /*
   const applyBoneRotation = (
     boneName: string,
     direction: THREE.Vector3, // Direccion global de los landmarks
@@ -75,6 +84,43 @@ export default function CharacterModel({
         new THREE.Euler(rotationOffset.x, rotationOffset.y, rotationOffset.z)
       )
     );
+  };
+  */
+
+  const applyBoneRotation = (
+    boneName: string,
+    direction: THREE.Vector3,
+    rotationOffset: THREE.Vector3 = new THREE.Vector3(0, 0, 0)
+  ) => {
+    if (!skeletonRef.current) return;
+
+    const bone = skeletonRef.current.bones.find((b) => b.name === boneName);
+    if (!bone) return;
+
+    const parentWorldQuat =
+      bone.parent?.getWorldQuaternion(new THREE.Quaternion()) ??
+      new THREE.Quaternion();
+
+    const parentWorldQuatInverse = invertQuaternion(parentWorldQuat);
+
+    const localDirection = applyQuaternionToVector3(
+      direction.clone(),
+      parentWorldQuatInverse
+    );
+
+    const targetQuat = quaternionFromUnitVectors(
+      new THREE.Vector3(0, 1, 0),
+      localDirection
+    );
+
+    // Slerp manual entre bone.quaternion y targetQuat con factor 0.3
+    bone.quaternion.slerp(targetQuat, 0.3);
+
+    const offsetQuat = quaternionFromEuler(
+      new THREE.Euler(rotationOffset.x, rotationOffset.y, rotationOffset.z)
+    );
+
+    bone.quaternion.multiply(offsetQuat);
   };
 
   useFrame(() => {
