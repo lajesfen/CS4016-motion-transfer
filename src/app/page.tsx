@@ -20,9 +20,9 @@ export default function Home() {
       </div>
       <a
         className="text-neutral-500 hover:text-white hover:underline transition-all duration-200 mt-8"
-        href="https://github.com/lajesfen/CS4016-mocap-three"
+        href="https://github.com/lajesfen/CS4016-motion-transfer"
       >
-        github.com/CS4016-mocap-three
+        github.com/CS4016-motion-transfer
       </a>
     </div>
   );
