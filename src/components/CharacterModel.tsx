@@ -1,13 +1,13 @@
 "use client";
 import { Landmark } from "@/types/Landmark";
 // Importing our custom math utils! :)
-import { 
-  calculateDirection, 
-  getMidpointVector,
+import {
   applyQuaternionToVector3,
-  quaternionFromUnitVectors,
+  calculateDirection,
+  getMidpointVector,
   invertQuaternion,
-  quaternionFromEuler
+  quaternionFromEuler,
+  quaternionFromUnitVectors
 } from "@/utils/mathUtils";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
@@ -17,15 +17,19 @@ import { PoseLandmarks } from "../constants/PoseLandmarks";
 
 export default function CharacterModel({
   landmarks,
+  modelPath,
 }: {
   landmarks: Landmark[];
+  modelPath: string;
 }) {
-  const gltf = useGLTF("/character.glb");
+  const gltf = useGLTF(modelPath);
   const modelRef = useRef<THREE.Group>(null);
   const skeletonRef = useRef<THREE.Skeleton | null>(null);
 
   useEffect(() => {
     if (!modelRef.current) return;
+
+    skeletonRef.current = null;
 
     modelRef.current.traverse((obj) => {
       if ((obj as THREE.SkinnedMesh).isSkinnedMesh) {
@@ -40,12 +44,12 @@ export default function CharacterModel({
         console.log(" Bone:", obj.name);
       }
     });
-  }, []);
+  }, [modelPath]);
 
   useEffect(() => {
     if (!modelRef.current) return;
     modelRef.current.scale.set(0.02, 0.02, 0.02);
-  }, []);
+  }, [modelPath]);
 
   const getLandmarkVector = (landmarkIndex: number): THREE.Vector3 => {
     const landmark = landmarks[landmarkIndex];
