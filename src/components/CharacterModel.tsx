@@ -7,7 +7,7 @@ import {
   getMidpointVector,
   invertQuaternion,
   quaternionFromEuler,
-  quaternionFromUnitVectors
+  quaternionFromUnitVectors,
 } from "@/utils/mathUtils";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
@@ -56,7 +56,7 @@ export default function CharacterModel({
     if (!landmark) return new THREE.Vector3();
     return new THREE.Vector3(landmark.x, landmark.y, landmark.z);
   };
-  
+
   /*
   const applyBoneRotation = (
     boneName: string,

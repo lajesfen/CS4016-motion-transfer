@@ -10,14 +10,14 @@ interface Model {
 }
 
 const defaultModels = [
-  { label: "Jugador lucha libre", path: "/character3.glb" },
+  { label: "Lucha Libre", path: "/character3.glb" },
   { label: "Ninja", path: "/character2.glb" },
   { label: "Amy", path: "/character.glb" },
 ];
 
 const backgrounds = [
-  { label: "Arena gym", type: "hdr", file: "/arena-gym.hdr" },
-  { label: "Moon lab", type: "hdr", file: "/moon-lab.hdr" },
+  { label: "Gym Arena", type: "hdr", file: "/arena-gym.hdr" },
+  { label: "Moon Lab", type: "hdr", file: "/moon-lab.hdr" },
   { label: "Studio", type: "hdr", file: "/christmas_studio.hdr" },
 ];
 

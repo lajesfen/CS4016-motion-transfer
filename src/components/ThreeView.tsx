@@ -1,9 +1,8 @@
 "use client";
 import { Landmark } from "@/types/Landmark";
-import { OrbitControls, Environment } from "@react-three/drei";
-import { Canvas, useLoader } from "@react-three/fiber";
+import { Environment, OrbitControls } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
 import CharacterModel from "./CharacterModel";
-import { TextureLoader } from "three";
 
 export default function ThreeView({
   landmarks,
@@ -14,11 +13,6 @@ export default function ThreeView({
   modelPath: string;
   background: { type: string; file: string };
 }) {
-  //  Load image texture only if background type is image
-  const imageTexture =
-    background.type === "image"
-      ? useLoader(TextureLoader, background.file)
-      : null;
 
   return (
     <div className="w-full h-full rounded overflow-hidden">
@@ -26,16 +20,7 @@ export default function ThreeView({
         camera={{ position: [0, 1, 3], fov: 75 }}
         style={{ background: "#1e1e1e" }}
       >
-        {/* Dynamic background  HDR */}
-        {background.type === "hdr" && (
-          <Environment files={background.file} background />
-        )}
-        {background.type === "image" && imageTexture && (
-          <mesh position={[0, 2, -5]}>
-            <planeGeometry args={[16, 9]} />
-            <meshBasicMaterial map={imageTexture} />
-          </mesh>
-        )}
+        <Environment files={background.file} background />
 
         {/* Lighting */}
         <ambientLight intensity={0.6} />
