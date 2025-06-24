@@ -10,8 +10,9 @@ interface Model {
 }
 
 const defaultModels = [
-  { label: "character.glb", path: "/character.glb" },
-  { label: "default_character.glb", path: "/default_character.glb" }, // ToDo: Reemplazar este modelo por otros que funcionen
+  { label: "Jugador lucha libre", path: "/character3.glb" },
+  { label: "Ninja", path: "/character2.glb" },
+  { label: "Amy", path: "/character.glb" }, 
 ];
 
 export default function Home() {
